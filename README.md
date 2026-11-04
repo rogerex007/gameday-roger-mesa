@@ -1,5 +1,6 @@
 # Todo empieza con un evento — kit inicial
 
+
 Este kit corresponde a la misión 02 del Game Pack AWS Event-Driven. Incluye la
 infraestructura Terraform base para estudiarla y preparar su validación.
 Las funciones Python son ejercicios pendientes de las siguientes misiones;
