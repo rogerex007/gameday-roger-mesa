@@ -1,0 +1,37 @@
+name: Terraform Lab Provisioning
+on:
+  workflow_dispatch:
+    inputs:
+      name_prefix:
+        description: Prefijo único asignado al equipo
+        required: true
+        type: string
+      apply:
+        description: Aplicar los recursos después de revisar el plan
+        required: true
+        default: false
+        type: boolean
+permissions:
+  contents: read
+jobs:
+  provision:
+    # Use a disposable runner dedicated to this team's Floci instance.
+    runs-on: [self-hosted, cloudops-arena, floci]
+    defaults:
+      run:
+        working-directory: game-packs/aws-event-driven/terraform
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: '1.10.5'
+      - run: terraform fmt -recursive
+      - run: terraform init
+      - run: terraform validate
+      - run: terraform plan -var='use_floci=true' -var='endpoint_url=http://127.0.0.1:4566' -var='lambda_endpoint_url=http://floci:4566' -var="name_prefix=$NAME_PREFIX"
+        env:
+          NAME_PREFIX: ${{ inputs.name_prefix }}
+      - if: inputs.apply
+        run: terraform apply -auto-approve -var='use_floci=true' -var='endpoint_url=http://127.0.0.1:4566' -var='lambda_endpoint_url=http://floci:4566' -var="name_prefix=$NAME_PREFIX"
+        env:
+          NAME_PREFIX: ${{ inputs.name_prefix }}
