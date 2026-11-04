@@ -1,0 +1,24 @@
+name: Revision inicial del laboratorio
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: game-packs/aws-event-driven/terraform
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: '1.10.5'
+      - name: Revisar formato
+        run: terraform fmt -recursive
+      - name: Inicializar sin backend
+        run: terraform init -backend=false -input=false
+      - name: Validar estructura Terraform
+        run: terraform validate
+      - name: Alcance de esta revision
+        run: echo 'Esta revision no ejecuta plan/apply, no prueba las Lambdas y no otorga puntos en Arena.'

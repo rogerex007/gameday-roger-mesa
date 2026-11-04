@@ -1,0 +1,13 @@
+.env
+.env.*
+*.tfvars
+!*.tfvars.example
+**/.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+**/.build/*
+!**/.build/.gitkeep
+__pycache__/
+*.py[cod]
+.DS_Store
