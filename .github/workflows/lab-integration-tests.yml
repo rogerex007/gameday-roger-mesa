@@ -21,7 +21,7 @@ jobs:
     env:
       ARENA_URL: ${{ vars.ARENA_URL || 'https://arena.costacorp.net' }}
       ARENA_EVENT_ID: ${{ vars.ARENA_EVENT_ID }}
-      ARENA_RETRY: ${{ github.event_name == 'workflow_dispatch' && inputs.retry || false }}
+      ARENA_RETRY: ${{ (github.event_name == 'workflow_dispatch' && inputs.retry) || github.run_attempt > 1 || false }}
     steps:
       - name: Solicitar evaluación y seguir el progreso
         shell: bash
