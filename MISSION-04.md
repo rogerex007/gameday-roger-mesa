@@ -89,7 +89,8 @@ Con el evento abierto y misión 04 activa, conserva `ARENA_EVENT_ID` y la GitHub
 App, y ejecuta **Actions → Evaluar misión 04 en Arena → Run workflow**. También
 se dispara al cambiar el laboratorio o este workflow en la rama predeterminada.
 Un nuevo commit genera una nueva entrega; para reintentar el mismo commit fallido
-activa `retry` (máximo cinco intentos). Aprobar concede 30 puntos una sola vez.
+activa `retry` o usa **Re-run jobs** en la ejecución fallida (máximo cinco
+intentos). Aprobar concede 30 puntos una sola vez.
 Los workflows de otras misiones pueden dispararse por el mismo push y rechazar
 la entrega porque su misión no está activa; revisa el de misión 04.
 
