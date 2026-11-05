@@ -1,5 +1,6 @@
 import json
 import os
+import urllib.request
 
 import boto3
 from botocore.exceptions import ClientError
@@ -35,7 +36,7 @@ def handler(event, context):
                 request = urllib.request.Request(
                     operations_url,
                     data=json.dumps({
-                        "service": "payments",
+                        "service": "inventory",
                         "orderId": order_id,
                     }).encode(),
                     headers={"Content-Type": "application/json"},
