@@ -1,4 +1,4 @@
-name: Evaluar laboratorio en Arena
+name: Validar y desplegar laboratorio en Arena
 on:
   push:
     paths:
@@ -23,10 +23,10 @@ jobs:
       ARENA_EVENT_ID: ${{ vars.ARENA_EVENT_ID }}
       ARENA_RETRY: ${{ github.event_name == 'workflow_dispatch' && inputs.retry || false }}
     steps:
-      - name: Solicitar evaluación y seguir el progreso
+      - name: Validar el plan en Arena
         shell: bash
         run: |
-          python3 - <<'PY'
+          cat > "$RUNNER_TEMP/arena-request.py" <<'PY'
           import base64, json, os, sys, time
           from urllib.error import HTTPError, URLError
           from urllib.parse import urlencode
@@ -79,7 +79,8 @@ jobs:
                   sys.exit('No se pudo conectar con Arena. Consulta con el instructor.')
 
           result = api('evaluations', {'event_id': event, 'mission_id': 'mission-02',
-              'retry': os.environ['ARENA_RETRY'].lower() == 'true'})
+              'retry': os.environ['ARENA_RETRY'].lower() == 'true',
+              'operation': os.environ.get('ARENA_OPERATION', 'plan')})
           if result.get('already_completed'):
               print(result['message'])
               sys.exit(0)
@@ -110,3 +111,9 @@ jobs:
               time.sleep(5)
               delivery = api('evaluations/' + event + '/' + delivery['evaluation_id'])['evaluation']
           PY
+          python3 "$RUNNER_TEMP/arena-request.py"
+
+      - name: Desplegar la infraestructura en Arena
+        env:
+         ARENA_OPERATION: deploy
+        run: python3 "$RUNNER_TEMP/arena-request.py"
